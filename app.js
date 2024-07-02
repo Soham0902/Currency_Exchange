@@ -1,4 +1,4 @@
-const BASE_URL = 'https://api.frankfurter.app';
+const BASE_URL = 'https://v6.exchangerate-api.com/v6/a9e8a039b493683b348958d1/pair/';
 
 const dropdowns = document.querySelectorAll(".dropdown select");
 const btn = document.querySelector("form button");
@@ -32,11 +32,15 @@ const updateExchangeRate = async (evt) => {
         amount.value = 1;
     }
 
-    const URL = `${BASE_URL}/latest?amount=${amtValue}&from=${fromCurr.value}&to=${toCurr.value}`;
+    const URL = `${BASE_URL}/${fromCurr.value}/${toCurr.value}/${amtValue}`;
     let response = await fetch(URL);
     let data = await response.json();
-    let exchangeValue = data['rates'][`${toCurr.value}`];
-    msg.innerText = `${amtValue} ${fromCurr.value} = ${exchangeValue} ${toCurr.value}`;
+    if(data['result'] === 'success'){
+      let exchangeValue = data['conversion_result'];
+      msg.innerText = `${amtValue} ${fromCurr.value} = ${exchangeValue} ${toCurr.value}`;
+    } else{
+      alert("This Country is not supported! Try Another!");
+    }
 }
 
 const updateFlag = (element) => {
